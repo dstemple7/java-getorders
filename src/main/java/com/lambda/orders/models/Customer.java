@@ -1,5 +1,7 @@
 package com.lambda.orders.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +14,9 @@ public class Customer
     //    CUSTCODE primary key, not null Long
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
     private long custcode;
 
     //    CUSTNAME String, not null
-    @Column(nullable = false)
     private String custname;
 
     //    CUSTCITY String
@@ -49,9 +49,11 @@ public class Customer
     //    AGENTCODE Long foreign key (one agent to many customers) not null
     @ManyToOne
     @JoinColumn(name = "agentcode", nullable = false)
+    @JsonIgnoreProperties(value = "customers")
     private Agent agent;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties(value = "customer")
     private List<Order> orders = new ArrayList<>();
 
     public Customer()
@@ -202,6 +204,16 @@ public class Customer
     public void setAgent(Agent agent)
     {
         this.agent = agent;
+    }
+
+    public List<Order> getOrders()
+    {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders)
+    {
+        this.orders = orders;
     }
 
     @Override

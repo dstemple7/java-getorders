@@ -1,8 +1,10 @@
 package com.lambda.orders.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -20,13 +22,15 @@ public class Order
     @JoinTable(name = "orderspayments",
         joinColumns = @JoinColumn(name = "ordnum"),
         inverseJoinColumns = @JoinColumn(name = "paymentid"))
-    private Set<Payment> payments = new HashSet<>();
+    @JsonIgnoreProperties(value = "orders")
+    private List<Payment> payments = new ArrayList<>();
 
     private double advanceamount;
 
     //    CUSTCODE Long foreign key (one customer to many orders) not null
     @ManyToOne
     @JoinColumn(name = "custcode", nullable = false)
+    @JsonIgnoreProperties(value = "orders")
     private Customer customer;
 
     private String orderdescription;
@@ -101,15 +105,26 @@ public class Order
         this.payments.add(p1);
     }
 
+    public List<Payment> getPayments()
+    {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments)
+    {
+        this.payments = payments;
+    }
+
     @Override
     public String toString()
     {
         return "Order{" +
             "ordnum=" + ordnum +
             ", ordamount=" + ordamount +
+            ", orderdescription=" + orderdescription +
             ", advanceamount=" + advanceamount +
             ", customer=" + customer +
-            ", orderdescription='" + orderdescription + '\'' +
+            ", payments='" + payments + '\'' +
             '}';
     }
 }
