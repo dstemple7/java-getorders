@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController
@@ -23,6 +25,14 @@ public class OrderController
     {
         Order myOrder = orderServices.findOrderById(ordnum);
         return new ResponseEntity<>(myOrder, HttpStatus.OK);
+    }
+
+    // http://localhost:2019/orders/advanceamount
+    @GetMapping(value = "/advanceamount", produces = "application/json")
+    public ResponseEntity<?> getAdvanceAmount()
+    {
+        List<Order> myList = orderServices.findAdvanceAmount(0);
+        return new ResponseEntity<>(myList, HttpStatus.OK);
     }
 
 }
